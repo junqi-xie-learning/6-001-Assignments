@@ -22,9 +22,9 @@
         (the-instruction-sequence '())
         (machine-ops 0)
         (trace-flag false)
-	(traced-regs '()))
+  (traced-regs '()))
     (let ((register-table
-	   (list (list 'pc pc) (list 'flags flags))))
+     (list (list 'pc pc) (list 'flags flags))))
       (define (allocate-register name)
         (if (assq name register-table)
             (error "Multiply-defined register: " name)
@@ -34,30 +34,30 @@
         'register-allocated)
       (define (execute)
         (let ((insts (get-contents pc)))
-	  (if (null? insts)
-	      'done
-	      (begin (set! machine-ops (inc machine-ops))
-		     (if trace-flag    ; Print code
-			 (write-line 
-			  (list 'executing: (instruction-text (car insts))))
-			 'not-traced)
-		     ((instruction-execution-proc (car insts)))
-		     (let ((inst (instruction-text (car insts))))
-		       (if (and (eq? 'assign (car inst))
-				(memq (cadr inst) traced-regs))
-			   (write-line (list 'assigned:
-					     (list (cadr inst)
-						   '=
-						   (get-register-contents
-						    dispatch
-						    (cadr inst)))))
-			   'not-traced))
-		     (execute)
-		     ))))
+    (if (null? insts)
+        'done
+        (begin (set! machine-ops (inc machine-ops))
+         (if trace-flag    ; Print code
+       (write-line 
+        (list 'executing: (instruction-text (car insts))))
+       'not-traced)
+         ((instruction-execution-proc (car insts)))
+         (let ((inst (instruction-text (car insts))))
+           (if (and (eq? 'assign (car inst))
+        (memq (cadr inst) traced-regs))
+         (write-line (list 'assigned:
+               (list (cadr inst)
+               '=
+               (get-register-contents
+                dispatch
+                (cadr inst)))))
+         'not-traced))
+         (execute)
+         ))))
       (define (dispatch message)
         (cond ((eq? message 'initialize-stack) (stack 'initialize))
-	      ((eq? message 'print-stack-statistics)
-	       (stack 'print-statistics))
+        ((eq? message 'print-stack-statistics)
+         (stack 'print-statistics))
               ((eq? message 'start)
                (set-contents! pc the-instruction-sequence)
                (execute))
@@ -76,9 +76,9 @@
               ((eq? message 'initialize-ops-counter) 
                (set! machine-ops 0)
                'ops-counter-initialized)
-	      ((eq? message 'print-ops)
+        ((eq? message 'print-ops)
                (write-line (list 'machine-ops '= machine-ops))
-	       'ops-printed)
+         'ops-printed)
               ((eq? message 'trace-on)
                (set! trace-flag true)
                'tracing)
@@ -86,13 +86,13 @@
                (set! trace-flag false)
                'not-tracing)
 
-	      ((eq? message 'trace-reg-on)
-	       (lambda (reg)
-		 (set! traced-regs (cons reg traced-regs))))
+        ((eq? message 'trace-reg-on)
+         (lambda (reg)
+     (set! traced-regs (cons reg traced-regs))))
 
-	      ((eq? message 'trace-reg-off)
-	       (lambda (reg)
-		 (set! traced-regs (delq reg traced-regs))))
+        ((eq? message 'trace-reg-off)
+         (lambda (reg)
+     (set! traced-regs (delq reg traced-regs))))
 
               (else (error "unknown operation -- MACHINE"))))
       dispatch)))
@@ -118,8 +118,8 @@
 (define (get-register machine register-name)
   (let ((val (assq register-name (machine 'register-table))))
     (if val
-	(cadr val)
-	(error "Unknown register" register-name))))
+  (cadr val)
+  (error "Unknown register" register-name))))
 
 
 ;;; some primitives for use in register machines
@@ -182,7 +182,7 @@
       (cond ((eq? message 'push) push)
             ((eq? message 'pop) (pop))
             ((eq? message 'initialize) (initialize))
-	    ((eq? message 'print-statistics) (print-statistics))
+      ((eq? message 'print-statistics) (print-statistics))
             (else (error "Unknown request -- STACK" message))))
     dispatch))
 

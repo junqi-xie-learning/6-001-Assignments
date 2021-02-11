@@ -204,7 +204,7 @@
 (define (collect-slots slot-names superclass)
   (let ((superclass-slots  (class-slot-names superclass)))
     (if (good-slot-names slot-names superclass-slots)
-	;;!!!! BUG: This should have duplicates removed
+  ;;!!!! BUG: This should have duplicates removed
         (append slot-names superclass-slots)
         (error "Bad slot list -- MAKE-CLASS >> "
                slot-names

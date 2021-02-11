@@ -17,8 +17,8 @@
 
 (define (compile-and-go expression)
   (let ((instructions
-	 (assemble (statements (compile expression 'val 'return))
-		   eceval)))
+   (assemble (statements (compile expression 'val 'return))
+       eceval)))
     (set-register-contents! eceval 'val instructions)
     (set-register-contents! eceval 'flags true)
     (fluid-let ((*unparser-list-breadth-limit* 10))
@@ -112,20 +112,20 @@
    eceval-operations
 '(
 start
-  (branch (label external-entry))		;if flags is set
+  (branch (label external-entry))    ;if flags is set
 
 read-eval-print-loop
   (perform (op initialize-eceval-stack))
   (assign exp
-	  (op prompt-for-command-expression)
-	  (const ";;; EC-Eval input: "))
+    (op prompt-for-command-expression)
+    (const ";;; EC-Eval input: "))
   (assign env (op get-global-environment))
   (assign continue (label print-result))
   (goto (label eval-dispatch))
 print-result
   (perform (op print-eceval-stack-statistics))
   (perform (op display)
-	   (const "\n;;; EC-Eval value: "))
+     (const "\n;;; EC-Eval value: "))
   (perform (op user-print) (reg val))
   (perform (op display) (const "\n"))
   (goto (label read-eval-print-loop))
@@ -136,7 +136,7 @@ unknown-expression-type-error
   (goto (label signal-error))
 
 unknown-procedure-type-error
-  (restore continue)		;clean up stack (from apply-dispatch)
+  (restore continue)    ;clean up stack (from apply-dispatch)
   (assign val (const 'unknown-procedure-type-error))
   (goto (label signal-error))
 
@@ -222,12 +222,12 @@ ev-definition-1
 
 ev-if
   (assign unev (reg exp))
-  (save unev)				;save expression for later
+  (save unev)        ;save expression for later
   (save env)
   (save continue)
   (assign continue (label ev-if-decide))
   (assign exp (op if-predicate) (reg unev))
-  (goto (label eval-dispatch))		;evaluate the predicate
+  (goto (label eval-dispatch))    ;evaluate the predicate
 ev-if-decide
   (restore continue)
   (restore env)
@@ -299,19 +299,19 @@ ev-let
 
 
 ev-application
-  (save continue)			;dest for after application
+  (save continue)      ;dest for after application
   (save env)
   (assign unev (op operands) (reg exp))
-  (save unev)				;the operands
+  (save unev)        ;the operands
   (assign exp (op operator) (reg exp))
   (assign continue (label ev-appl-did-operator))
-  (goto (label eval-dispatch))		;go to eval the operator
+  (goto (label eval-dispatch))    ;go to eval the operator
 
 ev-appl-did-operator
-  (restore unev)			;the operands
+  (restore unev)      ;the operands
   (restore env)
-  (assign argl (op empty-arglist))	;init argl
-  (assign proc (reg val))		;the operator
+  (assign argl (op empty-arglist))  ;init argl
+  (assign proc (reg val))    ;the operator
   (test (op no-operands?) (reg unev))
   (branch (label apply-dispatch))
   (save proc)

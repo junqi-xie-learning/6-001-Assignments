@@ -359,7 +359,7 @@
    (cons 'apply
          (lambda (rands)
            (define (smlist->list-of-smexps smlist)
-	     ;;converts (cons A (cons B ...)) into (A B ...)
+       ;;converts (cons A (cons B ...)) into (A B ...)
              (cond ((submodel-null? smlist)
                     '())
                    ((submodel-null? (caddr smlist))

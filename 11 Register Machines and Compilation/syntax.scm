@@ -8,7 +8,7 @@
   (or (number? exp)
       (eq? exp #t)
       (eq? exp #f)
-      (string? exp)))	; Our prompt (viz., "M-EVAL=> ") is a string.
+      (string? exp)))  ; Our prompt (viz., "M-EVAL=> ") is a string.
 
 ;;; Variables
 
@@ -46,8 +46,8 @@
   (if (symbol? (cadr exp))
       (caddr exp)
       (cons 'lambda
-            (cons (cdadr exp)		;formal parameters
-                  (cddr exp)))))	;body
+            (cons (cdadr exp)    ;formal parameters
+                  (cddr exp)))))  ;body
 
 
 ;;; LAMBDA expressions
@@ -85,8 +85,8 @@
 
 (define (sequence->begin seq)
   (cond ((null? seq) seq)
-	((last-exp? seq) (first-exp seq))
-	(else (make-begin seq))))
+  ((last-exp? seq) (first-exp seq))
+  (else (make-begin seq))))
 
 (define (make-begin exp) (cons 'begin exp))
 
@@ -101,7 +101,7 @@
 (define (no-operands? args) (null? args))
 (define (first-operand args) (car args))
 (define (rest-operands args) (cdr args))
-(define (last-operand? args) (null? (cdr args)))	;for chapter 5
+(define (last-operand? args) (null? (cdr args)))  ;for chapter 5
 
 ;;; COND Conditionals
 
@@ -146,10 +146,10 @@
 
 (define (let->combination let-exp)
   (let ((names (let-bound-variables let-exp))
-	(values (let-values let-exp))
-	(body (let-body let-exp)))
+  (values (let-values let-exp))
+  (body (let-body let-exp)))
     (cons (list 'LAMBDA names body)
-	  values)))
+    values)))
 
 
 ;;; Declaration syntax for call-by-name interpreter
@@ -172,8 +172,8 @@
 (define (exists p? l)
   (let loop ((l l))
     (cond ((null? l) false)
-	  ((p? (car l)) true)
-	  (else (loop (cdr l))))))
+    ((p? (car l)) true)
+    (else (loop (cdr l))))))
 
 
 ;;; Other special forms that are used in AMBScheme.

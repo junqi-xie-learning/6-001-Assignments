@@ -16,13 +16,13 @@
   (if (< n 2)
       n
       (+ (rec-fib (- n 1))
-	 (rec-fib (- n 2)))))
+   (rec-fib (- n 2)))))
 
 (define (iter-fib n)
   (define (iter count a b)
     (if (= count 0)
-	b
-	(iter (- count 1) (+ a b) a)))
+  b
+  (iter (- count 1) (+ a b) a)))
   (iter n 1 0))
 
 

@@ -236,15 +236,15 @@
 
 (define (naive-compile-and-display expression)
   (fluid-let ((*unparser-list-breadth-limit* #f)
-	      (*unparse-uninterned-symbols-by-name?* #T))
+        (*unparse-uninterned-symbols-by-name?* #T))
     (newline)
     (for-each
-	(lambda (statement)
-	  (newline)
-	  (cond ((pair? statement)
-		 (display "  ")
-		 (display statement))
-		(else (display statement))))
+  (lambda (statement)
+    (newline)
+    (cond ((pair? statement)
+     (display "  ")
+     (display statement))
+    (else (display statement))))
       (naive-compile expression))))
 
 

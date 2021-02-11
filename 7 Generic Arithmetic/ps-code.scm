@@ -217,10 +217,10 @@
   (define (dt->st rev-coeffs terms degree)
     (if (null? rev-coeffs)
         terms
-	(let ((coeff (car rev-coeffs))
-	      (rev-coeffs (cdr rev-coeffs)))
-	  (if (=zero? coeff)
-	      (dt->st rev-coeffs terms (inc degree))
+  (let ((coeff (car rev-coeffs))
+        (rev-coeffs (cdr rev-coeffs)))
+    (if (=zero? coeff)
+        (dt->st rev-coeffs terms (inc degree))
               (dt->st rev-coeffs
                       (adjoin-term (make-term degree coeff)
                                    terms)
@@ -235,20 +235,20 @@
 (define (+poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
-		 (+terms (term-list p1)
-			 (term-list p2)))
+     (+terms (term-list p1)
+       (term-list p2)))
       (error "Polys not in same var -- +POLY"
-	     (list p1 p2))))
+       (list p1 p2))))
 
 ;;; Need -poly ****
 
 (define (*poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
-		 (*terms (term-list p1)
-			 (term-list p2)))
+     (*terms (term-list p1)
+       (term-list p2)))
       (error "Polys not in same var -- *POLY"
-	     (list p1 p2))))
+       (list p1 p2))))
 
 ;;;   RepPoly --> RepPoly
 ;;; Need negate-poly ****

@@ -222,7 +222,7 @@
 
 ;;KEYWORD
 
-(define expression-keywords		;COND, LET treated as sugar
+(define expression-keywords    ;COND, LET treated as sugar
   '(quote lambda if let cond))
 
 (define nonexpression-keywords '(define else))
@@ -355,6 +355,64 @@
 
 ;;DESUGAR: <body in extended grammar> --> <body in kernel grammar>
 
+; (define (desugar body)
+;   (cond ((cond? body)
+;          (let ((clauses (clauses-of-cond body)))
+;            (if (null? clauses)
+;                submodel-useless-value
+;                (let ((first-clause (car clauses)))
+;                  (desugar
+;                   (if (else-clause? first-clause)
+;                       (expression-of-clause first-clause)
+;                       (make-if
+;                        (test-of-clause first-clause)
+;                        (expression-of-clause first-clause)
+;                        (make-cond (cdr clauses)))))))))
+;         ((let? body)
+;          (desugar
+;           (let ((bindings (bindings-of-let body)))
+;             (make-combination
+;              (make-lambda
+;               (map variable-of-binding bindings)
+;               (body-of-let body))
+;              (map init-of-binding bindings)))))
+;         ((or (self-evaluating? body)
+;              (symbol-expression? body)
+;              (variable? body)
+;              (submodel-null? body))
+;          body)
+;         ((lambda-expression? body)
+;          (make-lambda
+;           (formals-of-lambda body)
+;           (desugar (body-of-lambda body))))
+;         ((combination? body)
+;          (make-combination
+;           (desugar (operator-of body))
+;           (map desugar (operands-of body))))
+;         ((if? body)
+;          (make-if
+;           (desugar (test-of-if body))
+;           (desugar (consequent-of body))
+;           (desugar (alternative-of body))))
+;         (else
+;          (let ((defs (defines-of-body body)))
+;            (make-body
+;             (map make-define
+;                  (map variable-of-define defs)
+;                  (map desugar (map expression-of-define defs)))
+;             (desugar (expression-of-body body)))))))
+
+(define let*? (tagged-pair? 'let*))
+
+(define (make-let* bindings body)
+  (list 'let* bindings body))
+
+(define (bindings-of-let* body)
+  (cadr body))
+
+(define (body-of-let* body)
+  (caddr body))
+
 (define (desugar body)
   (cond ((cond? body)
          (let ((clauses (clauses-of-cond body)))
@@ -376,6 +434,15 @@
               (map variable-of-binding bindings)
               (body-of-let body))
              (map init-of-binding bindings)))))
+        ((let*? body)
+        (desugar
+          (let ((bindings (bindings-of-let* body)))
+            (if (null? bindings)
+          (body-of-let* body)
+          (make-combination 
+          (make-lambda (list (variable-of-binding (car bindings)))
+                  (make-let* (cdr bindings) (body-of-let* body)))
+          (list (init-of-binding (car bindings))))))))
         ((or (self-evaluating? body)
              (symbol-expression? body)
              (variable? body)

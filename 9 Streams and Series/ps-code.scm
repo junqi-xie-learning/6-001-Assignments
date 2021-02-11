@@ -49,7 +49,7 @@
   (if (= nterms 0)
       'done
       (begin (write-line (stream-car s))
-	     (show-series (stream-cdr s) (- nterms 1)))))
+       (show-series (stream-cdr s) (- nterms 1)))))
 
 ;;; return the coefficient of x^n
 
@@ -64,9 +64,9 @@
   (define zeros (cons-stream 0 zeros))
   (define (iter list)
     (if (null? list)
-	zeros
-	(cons-stream (car list)
-		     (iter (cdr list)))))
+  zeros
+  (cons-stream (car list)
+         (iter (cdr list)))))
   (iter list-of-coeffs))
 
 

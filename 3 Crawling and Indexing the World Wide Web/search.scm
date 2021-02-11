@@ -72,11 +72,11 @@
       (error "object not a graph: " graph)
       (cdr graph)))
 
-(define (graph-root graph)		; Graph -> Node|null
+(define (graph-root graph)    ; Graph -> Node|null
   (let ((elements (graph-elements graph)))
     (if (null? elements)
-	#f
-	(graph-element->node (car elements)))))
+  #f
+  (graph-element->node (car elements)))))
 
 ; Find the specified node in the graph
 (define (find-graph-element graph node)   ; Graph,Node -> Graph-Element|null
@@ -154,29 +154,29 @@
   ;; merge combines new states with the set of states still to explore
   (define (search-inner still-to-do)
     (if (null? still-to-do)
-	#f
-	(let ((current (car still-to-do)))
-	  (if *search-debug*
-	      (write-line (list 'now-at current)))
-	  (if (goal? current)
-	      #t
-	      (search-inner
-	       (merge (successors graph current) (cdr still-to-do)))))))
+  #f
+  (let ((current (car still-to-do)))
+    (if *search-debug*
+        (write-line (list 'now-at current)))
+    (if (goal? current)
+        #t
+        (search-inner
+         (merge (successors graph current) (cdr still-to-do)))))))
   (search-inner (list initial-state)))
 
 (define (DFS-simple start goal? graph)
   (search start
-	  goal?
-	  find-node-children
-	  (lambda (new old) (append new old))
-	  graph))
+    goal?
+    find-node-children
+    (lambda (new old) (append new old))
+    graph))
 
 (define (BFS-simple start goal? graph)
   (search start
-	  goal?
-	  find-node-children
-	  (lambda (new old) (append old new))
-	  graph))
+    goal?
+    find-node-children
+    (lambda (new old) (append old new))
+    graph))
 
 ;; Testing...
 
@@ -278,7 +278,7 @@
   (let ((index-entry (find-entry-in-index index key)))
     (if (null? index-entry)
       ;; no entry -- create and insert a new one...
-	(let ((new-entry (list key (list value))))
+  (let ((new-entry (list key (list value))))
           (set-cdr! index (cons new-entry (cdr index))))
 
       ;; entry exists -- insert value if not already there...

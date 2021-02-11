@@ -5,15 +5,15 @@
 ;;; this compiles and then displays the code
 (define (compile-and-display expression)
   (fluid-let ((*unparser-list-breadth-limit* #f)
-	      (*unparse-uninterned-symbols-by-name?* #T))
+        (*unparse-uninterned-symbols-by-name?* #T))
     (newline)
     (for-each
-	(lambda (statement)
-	  (newline)
-	  (cond ((pair? statement)
-		 (display "  ")
-		 (display statement))
-		(else (display statement))))
+  (lambda (statement)
+    (newline)
+    (cond ((pair? statement)
+     (display "  ")
+     (display statement))
+    (else (display statement))))
       (statements (compile expression 'val 'return)))))
 
 (define (compile exp target linkage)
@@ -180,7 +180,7 @@
             (make-instruction-sequence '(continue) all-regs
              `((goto (reg continue))))))
          |#
-	 ))
+   ))
 
 (define (compile-assignment exp target linkage)
   (let ((var (assignment-variable exp))
@@ -243,11 +243,11 @@
     (preserving '(continue)
      (make-instruction-sequence '(env proc argl) '(env)
       `(,proc-entry
-	(assign env (op compiled-procedure-env) (reg proc))
-	(assign env
-		(op extend-environment)
-		(const ,formals)
-		(reg argl)
-		(reg env))))
+  (assign env (op compiled-procedure-env) (reg proc))
+  (assign env
+    (op extend-environment)
+    (const ,formals)
+    (reg argl)
+    (reg env))))
      (compile-sequence (lambda-body exp) 'val 'return))))
 

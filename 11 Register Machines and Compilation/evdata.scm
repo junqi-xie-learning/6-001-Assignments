@@ -36,7 +36,7 @@
 
 (define (procedure-with-declarations? obj)
   (tagged-list? obj
-		'procedure-with-declarations))
+    'procedure-with-declarations))
 
 
 ;;;; THE INITIAL ENVIRONMENT
@@ -87,7 +87,7 @@
   (extend-environment
    primitives-from-underlying-scheme
    (map (lambda (name) (eval name user-initial-environment))
-	primitives-from-underlying-scheme)
+  primitives-from-underlying-scheme)
    the-empty-environment))
 
 (define primitives-from-underlying-scheme
@@ -100,29 +100,29 @@
   (define (parent-loop env)
     (define (scan vars vals)
       (cond ((null? vars)
-	     (parent-loop (cdr env)))
-	    ((eq? var (car vars))
-	     (car vals))
-	    (else
-	     (scan (cdr vars) (cdr vals)))))
+       (parent-loop (cdr env)))
+      ((eq? var (car vars))
+       (car vals))
+      (else
+       (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
-	(lookup-scheme-value var)
-	(scan (caar env) (cdar env))))
+  (lookup-scheme-value var)
+  (scan (caar env) (cdar env))))
   (parent-loop env))
 
 (define (set-variable-value! var val env)
   (define (parent-loop env)
     (define (scan vars vals)
       (cond ((null? vars)
-	     (parent-loop (cdr env)))
-	    ((eq? var (car vars))
-	     (set-car! vals val)
-	     the-unspecified-value)
-	    (else
-	     (scan (cdr vars) (cdr vals)))))
+       (parent-loop (cdr env)))
+      ((eq? var (car vars))
+       (set-car! vals val)
+       the-unspecified-value)
+      (else
+       (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
-	(error "Unbound variable -- SET!" var)
-	(scan (caar env) (cdar env))))
+  (error "Unbound variable -- SET!" var)
+  (scan (caar env) (cdar env))))
   (parent-loop env))
 
 (define (define-variable! var val env)
@@ -154,14 +154,14 @@
 (define (lookup-scheme-value var)
   (if access-entire-scheme-environment?
       (let ((vcell (assq var scheme-variable-cache)))
-	(cond (vcell (cdr vcell))
-	      ((not (lexical-unreferenceable? user-initial-environment var))
-	       (let ((val (lexical-reference user-initial-environment var)))
-		 (set! scheme-variable-cache
-		       (cons (cons var val) scheme-variable-cache))
-		 val))
-	      (else
-	       (error "Unbound variable" var))))
+  (cond (vcell (cdr vcell))
+        ((not (lexical-unreferenceable? user-initial-environment var))
+         (let ((val (lexical-reference user-initial-environment var)))
+     (set! scheme-variable-cache
+           (cons (cons var val) scheme-variable-cache))
+     val))
+        (else
+         (error "Unbound variable" var))))
       (error "Unbound variable" var)))
 
 

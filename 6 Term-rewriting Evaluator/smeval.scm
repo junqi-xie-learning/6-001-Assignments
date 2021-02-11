@@ -55,7 +55,7 @@
             (next-body (maybe-collect-garbage
                         step-number
                         (datum-of-tagged-body tagged-body))))
-	(let ((new-steps-list (add-step
+  (let ((new-steps-list (add-step
                                tag
                                step-number
                                next-body
@@ -80,7 +80,7 @@
 
 (define (add-step tag number body steps)
   (if (or (memq tag '(val stuck))
-	  (save-this-step? number body))
+    (save-this-step? number body))
       (cons (make-step number body) steps)
       steps))
 
@@ -107,10 +107,40 @@
 
      ;;SAVED STEP PREDICATE
 
-(define (save-this-step? n body)        ;cons at the rate
-  (or (zero? n)
-      (let ((sqn (round (sqrt n))))	;1/ sqrt(n)
-	(zero? (modulo n sqn)))))
+; (define (save-this-step? n body)        ;cons at the rate
+;   (or (zero? n)
+;       (let ((sqn (round (sqrt n))))  ;1/ sqrt(n)
+;   (zero? (modulo n sqn)))))
+
+; (define (save-this-step? n body) true)
+
+(define (every things pred)
+  (or (null? things)
+      (and (pred (car things))
+     (every (cdr things) pred))))
+
+; (define (simple? exp)
+;   (or (number? exp)
+;       (boolean? exp)
+;       (variable? exp)
+;       (and (combination? exp)
+;      (simple? (operator exp))
+;      (every (operands exp)
+;       simple?))))
+
+(define (simple? exp)
+  (or (number? exp)
+      (boolean? exp)
+      (variable? exp)
+      (and (combination? exp)
+     (simple? (operator exp))
+     (every (operands exp)
+      (lambda (arg)
+        (and (not (variable? arg))
+       (simple? arg)))))))
+
+(define (save-this-step? step-number body)
+  (simple? (expression-of-body body)))
 
     ;;SUBMODEL INTERRUPT PREDICATE
 
@@ -150,13 +180,17 @@
         final-body)))
 
 
+; (define (print-stepped-message step-number body)
+;   (begin (newline)
+;          (newline)
+;          (display ";==(")
+;          (display step-number)
+;          (display ")==>")
+;          (pp body)))
+
 (define (print-stepped-message step-number body)
   (begin (newline)
-         (newline)
-         (display ";==(")
-         (display step-number)
-         (display ")==>")
-         (pp body)))
+         (pp (expression-of-body body))))
 
 
 (define (print-final-message tag)

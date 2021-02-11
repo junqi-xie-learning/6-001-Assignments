@@ -296,8 +296,8 @@
 
 (define (parse-primitive-exp exp machine labels)
   (cond ((constant-exp? exp)
-	 (let ((c (constant-exp-value exp)))
-	   (lambda () c)))
+   (let ((c (constant-exp-value exp)))
+     (lambda () c)))
         ((label-exp? exp)
          (let ((l (lookup-label labels (label-exp-label exp))))
            (lambda () l)))

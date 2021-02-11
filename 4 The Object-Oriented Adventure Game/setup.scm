@@ -133,54 +133,54 @@
 
 (define (populate-spells rooms)
   (for-each (lambda (room)
-	      (clone-spell (pick-random (ask chamber-of-stata 'THINGS)) room))
-	    rooms))
+        (clone-spell (pick-random (ask chamber-of-stata 'THINGS)) room))
+      rooms))
 
 (define (populate-counterspells rooms)
   (for-each (lambda (room)
-	      (clone-counterspell (pick-random
+        (clone-counterspell (pick-random
                                    (ask chamber-of-stata-counter 'THINGS)) room))
-	    rooms))
+      rooms))
 
 (define (populate-rings-of-obfuscation rooms)
   (create-ring-of-obfuscation 'ring-of-obfuscation (pick-random rooms)))
 
 (define (populate-wands rooms)
   (for-each (lambda (room)
-	      (create-wand 'wand room))
-	    rooms))
+        (create-wand 'wand room))
+      rooms))
 
 (define (populate-players rooms)
   (let* ((students (map (lambda (name)
-			  (create-wit-student name
+        (create-wit-student name
                                               (pick-random rooms)
                                               (random-number 3)
                                               (random-number 3)))
-			'(ben-bitdiddle alyssa-hacker
-			  course-6-frosh lambda-man)))
+      '(ben-bitdiddle alyssa-hacker
+        course-6-frosh lambda-man)))
          ;uncomment after writing professors
-	 (profs (map (lambda (name)
-		       (create-wit-professor name
-					     (pick-random rooms)
-					     (random-number 3)
-					     (random-number 3)))
-		     '(susan-hockfield eric-grimson)))
-	 (monitors (map (lambda (name)
-			  (create-hall-monitor name
-					       (pick-random rooms)
-					       (random-number 3)
-					       (random-number 3)))
-			'(dr-evil mr-bigglesworth)))
-	 (trolls (map (lambda (name)
-			(create-troll name
-				      (pick-random rooms)
-				      (random-number 3)
-				      (random-number 3)))
-		      '(grendel registrar))))
+   (profs (map (lambda (name)
+           (create-wit-professor name
+               (pick-random rooms)
+               (random-number 3)
+               (random-number 3)))
+         '(susan-hockfield eric-grimson)))
+   (monitors (map (lambda (name)
+        (create-hall-monitor name
+                 (pick-random rooms)
+                 (random-number 3)
+                 (random-number 3)))
+      '(dr-evil mr-bigglesworth)))
+   (trolls (map (lambda (name)
+      (create-troll name
+              (pick-random rooms)
+              (random-number 3)
+              (random-number 3)))
+          '(grendel registrar))))
 
     (append students
-;	    profs        ;uncomment after writing wit-professor
-	    monitors trolls)))
+;      profs        ;uncomment after writing wit-professor
+      monitors trolls)))
 
 (define me 'will-be-set-by-setup)
 (define all-rooms 'will-be-set-by-setup)
@@ -203,7 +203,7 @@
 
     ;uncomment after writing chosen one
     (create-chosen-one 'hairy-cdr (pick-random rooms)
-		       (random-number 3) (random-number 3))
+           (random-number 3) (random-number 3))
     
     (set! me (create-avatar name (pick-random rooms)))
     (ask screen 'SET-ME me)
