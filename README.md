@@ -1,14 +1,13 @@
 # 6-001-Assignments
 
-This repository contains the assignments from MIT 6.001 (Spring 2005) with my solutions. 
+This repository contains the assignments from [MIT 6.001](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/) (Spring 2005) with my solutions. 
 I downloaded the problems as a reference, but I do not claim the copyright of these problems.
 
 If you found any mistakes in the solutions, please create an issue or contact me through email.
 
 ## Environment Setup
 
-* This repository was mostly tested with the `sicp` language installed on [DrRacket](https://racket-lang.org/).
-* For the exercises that cannot run on that platform, I use the [MIT 6.001 Scheme implementations](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/tools/).
+* This repository was tested with MIT/GNU Scheme 11.1 on Debian GNU/Linux 10.
 
 ## Current Progress
 
