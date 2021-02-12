@@ -6,9 +6,9 @@
 
 (define (2sym x)
   (cond ((symbol? x) x)
-	((string? x) (string->symbol x))
-	((number? x) (string->symbol (number->string x)))
-	(else (error x))))
+  ((string? x) (string->symbol x))
+  ((number? x) (string->symbol (number->string x)))
+  (else (error x))))
 
 (define the-web
   (make-graph (list
@@ -17,18 +17,18 @@
      '(http://sicp.csail.mit.edu/SchemeImplementations
        http://sicp.csail.mit.edu/psets)
      (map 2sym '(18:30:02 2004 6001-WEBMASTER@CSAIL.MIT.EDU 8 
-			  ABOUT ALL AM AND ANNOUNCEMENTS ANSWERS ARE ASSIGNMENT 
-			  ASSIGNMENTS BY CALENDAR CAN CHANGE COLLABORATIVE 
-			  COMMENTS COMPUTER COPYRIGHT CURRENT DO DOCUMENTATION 
-			  EDT FALL FIND FOR GENERAL GET GETTING GUIDELINES HELP
-			  HOW I IN INDIVIDUAL INFORMATION INSTITUTE INTERPRETATION 
-			  IS LAST LECTURE MASSACHUSETTS ME MICROQUIZZES MODIFIED 
-			  MY NEW NOTES OCT OF ON ON-LINE ORAL OWN PAST POLICY 
-			  POSTED PRESENTATIONS PREVIOUS PROBLEM PROGRAMS 
-			  RECITATION RECITATIONS RECORDS RESERVED RIGHTS SCHEME 
-			  SECTION SECTIONS SEND SET SETS SITE SOFTWARE STAFF
-			  STRUCTURE SUBJECT TECHNOLOGY TELL TERMS THE THIS THU TO
-			  UP USE WEEK WHAT WHERE WHICH WORK WRITING)))
+        ABOUT ALL AM AND ANNOUNCEMENTS ANSWERS ARE ASSIGNMENT 
+        ASSIGNMENTS BY CALENDAR CAN CHANGE COLLABORATIVE 
+        COMMENTS COMPUTER COPYRIGHT CURRENT DO DOCUMENTATION 
+        EDT FALL FIND FOR GENERAL GET GETTING GUIDELINES HELP
+        HOW I IN INDIVIDUAL INFORMATION INSTITUTE INTERPRETATION 
+        IS LAST LECTURE MASSACHUSETTS ME MICROQUIZZES MODIFIED 
+        MY NEW NOTES OCT OF ON ON-LINE ORAL OWN PAST POLICY 
+        POSTED PRESENTATIONS PREVIOUS PROBLEM PROGRAMS 
+        RECITATION RECITATIONS RECORDS RESERVED RIGHTS SCHEME 
+        SECTION SECTIONS SEND SET SETS SITE SOFTWARE STAFF
+        STRUCTURE SUBJECT TECHNOLOGY TELL TERMS THE THIS THU TO
+        UP USE WEEK WHAT WHERE WHICH WORK WRITING)))
     (make-graph-element
      'http://sicp.csail.mit.edu/SchemeImplementations
      '(http://sicp.csail.mit.edu/getting-help.html
@@ -120,7 +120,7 @@
 (define *all-words*
   (list->vector 
    (map 2sym 
-	'(0 09:38:18 1 10 11:09 15 18:30:02 2004 2 20 23 23:32:29
+  '(0 09:38:18 1 10 11:09 15 18:30:02 2004 2 20 23 23:32:29
        24 28 3 3.1 339-0052 34-501 4 4.0 4:33 5 6 6.001
        6001-HELP@MIT.EDU 6001-WEBMASTER@CSAIL.MIT.EDU 7 7.5A 8 947-2394
        95 98 A ABLE ABOUT ACCESS ACCESSIBLE ADDITION ADDITIONAL
@@ -211,8 +211,8 @@
       (define (make-node name)
         (let ((exits (choose (min 10 (random size)) size))
               (words (choose (+ 50 (random 200)) n-total-names)))
-	  (if *random-web-debugging*
-	      (write-line (list name (length exits) (length words))))
+    (if *random-web-debugging*
+        (write-line (list name (length exits) (length words))))
           (list name
                 (let ((random-exits
                        (map (lambda (n) (list-ref node-names n))

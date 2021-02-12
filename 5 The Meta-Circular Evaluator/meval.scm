@@ -15,8 +15,8 @@
          (make-procedure (lambda-parameters exp) (lambda-body exp) env))
         ((begin? exp) (eval-sequence (begin-actions exp) env))
         ((cond? exp) (m-eval (cond->if exp) env))
-	((let? exp) (m-eval (let->application exp) env))
-;	((do-while? exp) (eval-do-while exp env))
+  ((let? exp) (m-eval (let->application exp) env))
+;  ((do-while? exp) (eval-do-while exp env))
         ((application? exp)
          (m-apply (m-eval (operator exp) env)
                 (list-of-values (operands exp) env)))
@@ -63,17 +63,17 @@
         (values (let-values expr))
         (body (let-body expr)))
     (make-application (make-lambda names body)
-		      values)))
+          values)))
 
 (define (cond->if expr)
   (let ((clauses (cond-clauses expr)))
     (if (null? clauses)
-	#f
-	(if (eq? (car (first-cond-clause clauses)) 'else)
-	    (make-begin (cdr (first-cond-clause clauses)))
-	    (make-if (car (first-cond-clause clauses))
-		     (make-begin (cdr (first-cond-clause clauses)))
-		     (make-cond (rest-cond-clauses clauses)))))))
+  #f
+  (if (eq? (car (first-cond-clause clauses)) 'else)
+      (make-begin (cdr (first-cond-clause clauses)))
+      (make-if (car (first-cond-clause clauses))
+         (make-begin (cdr (first-cond-clause clauses)))
+         (make-cond (rest-cond-clauses clauses)))))))
 
 (define input-prompt ";;; M-Eval input:")
 (define output-prompt ";;; M-Eval value:")
@@ -82,11 +82,11 @@
   (prompt-for-input input-prompt)
   (let ((input (do-meval-read)))
     (if (eq? input '**quit**)
-	'meval-done
-	(let ((output (m-eval input the-global-environment)))
-	  (announce-output output-prompt)
-	  (display output)
-	  (driver-loop)))))
+  'meval-done
+  (let ((output (m-eval input the-global-environment)))
+    (announce-output output-prompt)
+    (display output)
+    (driver-loop)))))
 
 (define (prompt-for-input string)
   (newline) (newline) (display string) (newline))
@@ -120,8 +120,8 @@
       ; type: list<expression> -> list<symbol>
 (define (used-in-sequence exps) ; this is like free-in,
   (fold-right merge-names       ; but works on a sequence of expressions
-	      (no-names) 
-	      (map names-used-in exps)))
+        (no-names) 
+        (map names-used-in exps)))
 
       ; type: list<symbol> -> symbol
 (define (fresh-symbol free)         ; computes a new symbol not occurring in free
@@ -135,40 +135,40 @@
 ; type: expression -> list<symbol>
 (define (names-used-in exp)
   (cond ((self-evaluating? exp) 
-	 ... )
+   ... )
         ((variable? exp) 
-	 ... )
+   ... )
         ((quoted? exp) (no-names))
         ((assignment? exp) 
-	 (merge-names (names-used-in (assignment-variable exp))
-		      (names-used-in (assignment-value exp))))
-;	((unassignment? exp)
-;	 ... )
+   (merge-names (names-used-in (assignment-variable exp))
+          (names-used-in (assignment-value exp))))
+;  ((unassignment? exp)
+;   ... )
         ((definition? exp)
-	 (merge-names (names-used-in (definition-variable exp))
-		      (names-used-in (definition-value exp))))
+   (merge-names (names-used-in (definition-variable exp))
+          (names-used-in (definition-value exp))))
         ((if? exp)
-	 (merge-names (names-used-in (if-predicate exp))
-  	   (merge-names (names-used-in (if-consequent exp))
-			(names-used-in (if-alternative exp)))))
+   (merge-names (names-used-in (if-predicate exp))
+       (merge-names (names-used-in (if-consequent exp))
+      (names-used-in (if-alternative exp)))))
         ((lambda? exp)
-	 ... )
+   ... )
         ((begin? exp) (used-in-sequence (cdr exp)))
         ((cond? exp) (names-used-in (cond->if exp)))
-	((let? exp) (names-used-in (let->application exp)))
+  ((let? exp) (names-used-in (let->application exp)))
 ;       ((let*? exp)
-;	 ... )
-;	((and? exp)
-;	 ... )
-;	((or? exp)
-;	 ... )
-;	((do-while? exp)
-;	 ... )
-;	((case? exp)
-;	 ... )
+;   ... )
+;  ((and? exp)
+;   ... )
+;  ((or? exp)
+;   ... )
+;  ((do-while? exp)
+;   ... )
+;  ((case? exp)
+;   ... )
         ((application? exp)
-	 (merge-names (names-used-in (operator exp))
-		      (used-in-sequence (operands exp))))
+   (merge-names (names-used-in (operator exp))
+          (used-in-sequence (operands exp))))
         (else (error "Unknown expression type -- NAMES-USED-IN" exp))))
 
 
@@ -187,10 +187,10 @@ some test cases:
 
 (names-used-in
  '(let* ((x 4)
-	 (y val))
+   (y val))
     (if (or z (not z))
-	(+ x y)
-	7)))
+  (+ x y)
+  7)))
 ;Value: (+ not z val y x)
 
 (fresh-symbol '(+ not z val y x))
@@ -202,54 +202,54 @@ some test cases:
 (load-option 'format)
 (define (warn-if-defined-in-regular-scheme var)
   (if (and (not *in-meval*)
-	   *meval-warn-define*
-	   (environment-bound? (the-environment) var))
+     *meval-warn-define*
+     (environment-bound? (the-environment) var))
       (format #t ";Warning: ~A is also bound in normal scheme.~%; Did you intend to define inside Meval?~%"
-	      var)))
+        var)))
 
 (define meval-mode 
   (if (not (environment-bound? (the-environment) 'meval-mode))
       (in-package (->environment '(edwin))
-	(if edwin-editor
-	    (make-mode 'Meval #f "Meval" #f "repl is in Meval mode"
-		       (lambda (buffer) 'done))
-	    #f))
+  (if edwin-editor
+      (make-mode 'Meval #f "Meval" #f "repl is in Meval mode"
+           (lambda (buffer) 'done))
+      #f))
       meval-mode))
 
 (define set-meval-mode!
   (in-package (->environment '(edwin))
     (lambda ()
       (if edwin-editor
-	  (let ((sm (->mode "scheme"))
-		(repl (->mode "inferior-repl"))
-		(me (->mode "Meval")))
-	    (for-each (lambda (buffer)
-			(if (or (eq? sm (buffer-major-mode buffer))
-				(eq? repl (buffer-major-mode buffer)))
-			    (enable-buffer-minor-mode! buffer me)))
-		      (buffer-list)))
-	  'nothing-to-do))))
+    (let ((sm (->mode "scheme"))
+    (repl (->mode "inferior-repl"))
+    (me (->mode "Meval")))
+      (for-each (lambda (buffer)
+      (if (or (eq? sm (buffer-major-mode buffer))
+        (eq? repl (buffer-major-mode buffer)))
+          (enable-buffer-minor-mode! buffer me)))
+          (buffer-list)))
+    'nothing-to-do))))
 
 (define clear-meval-mode!
   (in-package (->environment '(edwin))
     (lambda ()
       (if edwin-editor
-	  (let ((sm (->mode "scheme"))
-		(repl (->mode "inferior-repl"))
-		(me (->mode "Meval")))
-	    (for-each (lambda (buffer)
-			(if (or (eq? sm (buffer-major-mode buffer))
-				(eq? repl (buffer-major-mode buffer)))
-			    (disable-buffer-minor-mode! buffer me)))
-		      (buffer-list)))
-	  'nothing-to-do))))
+    (let ((sm (->mode "scheme"))
+    (repl (->mode "inferior-repl"))
+    (me (->mode "Meval")))
+      (for-each (lambda (buffer)
+      (if (or (eq? sm (buffer-major-mode buffer))
+        (eq? repl (buffer-major-mode buffer)))
+          (disable-buffer-minor-mode! buffer me)))
+          (buffer-list)))
+    'nothing-to-do))))
 
 (define (do-meval-read)
   (if *in-meval*
       (read)
       (dynamic-wind (lambda () (set! *in-meval* #t) (set-meval-mode!))
-		    (lambda () (read))
-		    (lambda () (set! *in-meval* #f) (clear-meval-mode!)))))
+        (lambda () (read))
+        (lambda () (set! *in-meval* #f) (clear-meval-mode!)))))
 
 ;;;;;;;;;;;;;;;;;;; end gift
 

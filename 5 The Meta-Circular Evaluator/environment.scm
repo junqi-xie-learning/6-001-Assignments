@@ -49,27 +49,27 @@
   (if (eq? env the-empty-environment)
       (error "Unbound variable -- LOOKUP" var)
       (let* ((frame (first-frame env))
-	     (binding (find-in-frame var frame)))
-	(if binding
-	    (binding-value binding)
-	    (lookup-variable-value var (enclosing-environment env))))))
+       (binding (find-in-frame var frame)))
+  (if binding
+      (binding-value binding)
+      (lookup-variable-value var (enclosing-environment env))))))
 
 (define (set-variable-value! var val env)
   (if (eq? env the-empty-environment)
       (error "Unbound variable -- LOOKUP" var)
       (let* ((frame (first-frame env))
-	     (binding (find-in-frame var frame)))
-	(if binding
-	    (set-binding-value! binding val)
-	    (set-variable-value! var val (enclosing-environment env))))))
+       (binding (find-in-frame var frame)))
+  (if binding
+      (set-binding-value! binding val)
+      (set-variable-value! var val (enclosing-environment env))))))
 
 (define (define-variable! var val env)
   (warn-if-defined-in-regular-scheme var)
   (let* ((frame (first-frame env))
-	 (binding (find-in-frame var frame)))
+   (binding (find-in-frame var frame)))
     (if binding
-	(set-binding-value! binding val)
-	(add-binding-to-frame! var val frame))))
+  (set-binding-value! binding val)
+  (add-binding-to-frame! var val frame))))
 
 ; primitives procedures - hooks to MITScheme procs
 (define (primitive-procedure? proc) (tagged-list? proc 'primitive))
@@ -78,16 +78,16 @@
   (list (list 'car car)
         (list 'cdr cdr)
         (list 'cons cons)
-	(list 'set-car! set-car!)
-	(list 'set-cdr! set-cdr!)
+  (list 'set-car! set-car!)
+  (list 'set-cdr! set-cdr!)
         (list 'null? null?)
         (list '+ +)
-	(list '- -)
-	(list '< <)
+  (list '- -)
+  (list '< <)
         (list '> >)
         (list '= =)
-	(list 'display display)
-	(list 'not not)
+  (list 'display display)
+  (list 'not not)
         ; ... more primitives
         ))
 
@@ -104,7 +104,7 @@
   (let ((initial-env (extend-environment (primitive-procedure-names)
                                          (primitive-procedure-objects)
                                          the-empty-environment))
-	(oldwarn *meval-warn-define*))
+  (oldwarn *meval-warn-define*))
     (set! *meval-warn-define* #f)
     (define-variable! 'true #t initial-env)
     (define-variable! 'false #f initial-env)
