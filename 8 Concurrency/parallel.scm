@@ -40,44 +40,14 @@
        unspecific))
     terminator))
 
-#|
-;;; IO system is not completely interlocked, so...
-
-(define (try n)
-  (parallel-execute
-   (lambda ()
-     (write-line 'hi)
-     (let lp ((i 0))
-       (if (< i 10000)
-     (lp (1+ i))))
-     (write-line 'gjs))
-   (lambda ()
-     (write-line 'there)
-     (let lp ((i 0))
-       (if (< i n)
-     (lp (1+ i))))
-     (write-line 'foo))))
-
-(define foo (try 9188))
-;Value foo
-
-hi
-there
-foo
-foo
-gjs
-
-(foo)
-;No value
-|#
+;;; This solves the IO interlock problem
 
 (define (make-serializer)
   (let ((mutex (make-thread-mutex)))
     (define (serialized f)
       (define (serialized-f . args)
-  (with-thread-mutex-locked mutex
-          (lambda ()
-            (apply f args))))
+        (with-thread-mutex-locked mutex
+          (lambda () (apply f args))))
       serialized-f)
     serialized))
 
@@ -91,41 +61,3 @@ gjs
 
 (define write
   (output-serialized write))
-#|
-;;; This solves the IO interlock problem
-
-
-(define (try n)
-  (parallel-execute
-   (lambda ()
-     (write-line 'hi)
-     (let lp ((i 0))
-       (if (< i 10000)
-     (lp (1+ i))))
-     (write-line 'gjs))
-   (lambda ()
-     (write-line 'there)
-     (let lp ((i 0))
-       (if (< i n)
-     (lp (1+ i))))
-     (write-line 'foo))))
-
-(define foo (try 9197))
-;Value: foo
-
-hi
-there
-gjs
-foo
-
-(define foo (try 9196))
-;Value: foo
-
-hi
-there
-foo
-gjs
-|#
-
-
-

@@ -6,33 +6,33 @@
 
 (define (make-market name initial-price)
   (let ((price initial-price)
-  (price-serializer (make-serializer))
-  (pending-orders '())
-  (orders-serializer (make-serializer)))
+        (price-serializer (make-serializer))
+        (pending-orders '())
+        (orders-serializer (make-serializer)))
     (define (the-market m)
       (cond ((eq? m 'new-price!)  
-       (price-serializer
-         (lambda (update)
-           (set! price (update price)))))         
-      ((eq? m 'get-price)
-       price)
-      ((eq? m 'new-order!)
-       (orders-serializer
-        (lambda (new-order)
-    (set! pending-orders
-          (append pending-orders
-            (list new-order))))))
-      ((eq? m 'execute-an-order)
-       (((orders-serializer
-    (lambda ()
-      (if (not (null? pending-orders))
-          (let ((outstanding-order (car pending-orders)))
-      (set! pending-orders (cdr pending-orders))
-      outstanding-order)
-          (lambda () 'nothing-to-do)))))))
-      ((eq? m 'get-name) name)
-      (else
-       (error "Wrong message" m))))
+             (price-serializer
+               (lambda (update)
+                 (set! price (update price)))))      
+            ((eq? m 'get-price)
+             price)
+            ((eq? m 'new-order!)
+             (orders-serializer
+               (lambda (new-order)
+                 (set! pending-orders
+                       (append pending-orders
+                         (list new-order))))))
+            ((eq? m 'execute-an-order)
+             (((orders-serializer
+                (lambda ()
+                  (if (not (null? pending-orders))
+                      (let ((outstanding-order (car pending-orders)))
+                        (set! pending-orders (cdr pending-orders))
+                        outstanding-order)
+                      (lambda () 'nothing-to-do)))))))
+            ((eq? m 'get-name) name)
+            (else
+              (error "Wrong message" m))))
     the-market))
 
 
@@ -74,38 +74,41 @@
     
     (define (change-assets delta-money delta-contracts)
       ((trader-serializer
-  (lambda ()
-    (set! balance (+ balance delta-money))
-    (set! contracts (+ contracts delta-contracts))))))
+        (lambda ()
+          (set! balance (+ balance delta-money))
+          (set! contracts (+ contracts delta-contracts))))))
 
     (define (a<b low-place low-price high-place high-price)
       (if (> (- high-price low-price) transaction-cost)
-    (let ((amount-to-gamble (min authorization balance)))
-      (let ((ncontracts    ;round to nearest integer
-       (round (/ amount-to-gamble (- high-price low-price)))))
-        (buy ncontracts low-place change-assets)
-        (sell ncontracts high-place change-assets)))))
+          (let ((amount-to-gamble (min authorization balance)))
+            (let ((ncontracts    ;round to nearest integer
+            (round (/ amount-to-gamble (- high-price low-price)))))
+              (buy ncontracts low-place change-assets)
+              (sell ncontracts high-place change-assets)))))
 
     (define (consider-a-trade)
       (let ((nikkei-225-tokyo (tokyo 'get-price))
-      (nikkei-225-singapore (singapore 'get-price)))
-  (if (< nikkei-225-tokyo nikkei-225-singapore)
-      (a<b tokyo nikkei-225-tokyo
-     singapore nikkei-225-singapore)
-      (a<b singapore nikkei-225-singapore
-     tokyo nikkei-225-tokyo))))
+            (nikkei-225-singapore (singapore 'get-price)))
+        (if (< nikkei-225-tokyo nikkei-225-singapore)
+            (a<b tokyo nikkei-225-tokyo
+          singapore nikkei-225-singapore)
+            (a<b singapore nikkei-225-singapore
+          tokyo nikkei-225-tokyo))))
 
     (define (me message)
       (cond ((eq? message 'name) name)
-      ((eq? message 'balance) balance)
-      ((eq? message 'contracts) contracts)
-      ((eq? message 'consider-a-trade) (consider-a-trade))
-      (else
-       (error "Unknown message -- ARBITRAGER" message))))
+            ((eq? message 'balance) balance)
+            ((eq? message 'contracts) contracts)
+            ((eq? message 'consider-a-trade) (consider-a-trade))
+            (else
+            (error "Unknown message -- ARBITRAGER" message))))
     me))
 
 (define nick-leeson
   (make-arbitrager "Nick Leeson" 1000000000. 0.0 10000.))
+
+(define bob-citron
+  (make-arbitrager "Bob Citron" 1700000000. 0.0 10000.))
 
 ;;; The following parameters determine the way the Nikkei average
 ;;;  drifts over time, and how the two markets differ.  The details of
@@ -123,18 +126,18 @@
      ;;  with zero mean and unity standard deviation.
      ;; The fundamental drift
      (set! nikkei-fundamental
-     (+ nikkei-fundamental
-        nikkei-drift
-        (* nikkei-split (+ d1 d2))))
+           (+ nikkei-fundamental
+              nikkei-drift
+              (* nikkei-split (+ d1 d2))))
      ;; The actual split -- cannot be modified
      ((tokyo 'new-price!)
       (lambda (old-price)
-  (+ (average nikkei-fundamental old-price)
-     (* nikkei-split d1))))
+        (+ (average nikkei-fundamental old-price)
+          (* nikkei-split d1))))
      ((singapore 'new-price!)
       (lambda (old-price)
-     (+ (average nikkei-fundamental old-price)
-        (* nikkei-split d2)))))))
+        (+ (average nikkei-fundamental old-price)
+          (* nikkei-split d2)))))))
 
 (define (ticker market)
   (newline)
@@ -179,26 +182,32 @@
     (if stop-world (stop-world))
     (set! stop-world
     (parallel-execute
-     (do-aperiodically (lambda ()
-             (nikkei-update))
-           3000) 
-     (do-aperiodically (lambda ()
-             (nick-leeson 'consider-a-trade))
-           4000) 
-     (do-aperiodically (lambda ()
-             (audit nick-leeson))
-           20000)
-     (do-aperiodically (lambda ()
-             (tokyo 'execute-an-order))
-           2000)
-     (do-aperiodically (lambda ()
-             (singapore 'execute-an-order))
-           2500)
-     (do-periodically (lambda ()
-            (ticker tokyo))
-          10000)
-     (do-periodically (lambda ()
-            (ticker singapore))
-          10000)
+     (do-aperiodically 
+       (lambda () (nikkei-update))
+         3000)
+     (do-aperiodically
+       (lambda () (nick-leeson 'consider-a-trade))
+         4000)
+     (do-aperiodically
+       (lambda () (bob-citron 'consider-a-trade))
+         4000)
+     (do-aperiodically
+       (lambda () (audit nick-leeson))
+         20000)
+     (do-aperiodically
+       (lambda () (audit bob-citron))
+         20000)
+     (do-aperiodically
+       (lambda () (tokyo 'execute-an-order))
+         2000)
+     (do-aperiodically
+       (lambda () (singapore 'execute-an-order))
+         2500)
+     (do-periodically
+       (lambda () (ticker tokyo))
+         10000)
+     (do-periodically
+       (lambda () (ticker singapore))
+         10000)
       ))
     'running)
